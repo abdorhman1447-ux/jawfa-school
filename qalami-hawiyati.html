@@ -1,0 +1,101 @@
+<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body><title>قلمي هويتي</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@400;700&family=Reem+Kufi:wght@600;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: phone notebook — week list on top, each week opens a practice sheet with model letters, tracing pad and a 7-day home log. */
+:root{
+  --bg:#F4F1EC; --paper:#FFFDF9; --sunk:#ECE6DC; --line:#DCD2C2; --fg:#2A2118; --muted:#6E6253;
+  --ink:#1F3A6B; --red:#A63A2A; --ok:#2E7D4F; --ok-soft:#E1F1E6; --gold:#B8862B; --rule:#E6D9C3; --on:#FFFFFF;
+  --ruqaa:"Aref Ruqaa","IBM Plex Sans Arabic",serif; --display:"Reem Kufi","IBM Plex Sans Arabic",sans-serif; --body:"IBM Plex Sans Arabic",Tahoma,sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#15120E;--paper:#1F1A14;--sunk:#2A231B;--line:#3A3127;--fg:#EFE7DA;--muted:#B3A690;--ink:#9DB7EA;--red:#E58A78;--ok:#6ED29A;--ok-soft:#173022;--gold:#E2B456;--rule:#3A3127;--on:#15120E;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#15120E;--paper:#1F1A14;--sunk:#2A231B;--line:#3A3127;--fg:#EFE7DA;--muted:#B3A690;--ink:#9DB7EA;--red:#E58A78;--ok:#6ED29A;--ok-soft:#173022;--gold:#E2B456;--rule:#3A3127;--on:#15120E;color-scheme:dark}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:16px;line-height:1.65;direction:rtl;min-height:100vh}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--ink)}
+button{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+h1,h2,h3{font-family:var(--display);margin:0;text-wrap:balance;font-weight:700}
+.wrap{max-width:560px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 40px;display:flex;flex-direction:column;gap:14px}
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--ink);color:#fff;margin-inline:calc(-1*max(16px,env(safe-area-inset-left,0px)));padding:10px max(16px,env(safe-area-inset-right,0px)) 10px max(16px,env(safe-area-inset-left,0px));display:flex;align-items:center;gap:10px}
+.top b{font-family:var(--ruqaa);font-size:24px;flex:1;font-weight:700}
+.top button{background:rgba(255,255,255,.15);border:0;color:#fff;border-radius:99px;padding:4px 12px;font-size:13px;cursor:pointer}
+.sheet{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:18px;display:flex;flex-direction:column;gap:12px}
+.hero{text-align:center;align-items:center;background:var(--paper) repeating-linear-gradient(to bottom,transparent 0 37px,var(--rule) 37px 38px)}
+.hero h1{font-family:var(--ruqaa);font-size:54px;color:var(--ink);line-height:1.3;font-weight:700}
+.hero p{margin:0;color:var(--muted)}
+.tag{display:inline-block;background:var(--sunk);border-radius:99px;padding:2px 12px;font-size:13px;font-weight:700;color:var(--red)}
+.wk{display:flex;align-items:center;gap:12px;background:var(--paper);border:1.5px solid var(--line);border-radius:14px;padding:12px 14px;cursor:pointer;text-align:right;width:100%}
+.wk .n{width:42px;height:42px;border-radius:12px;background:var(--sunk);display:grid;place-items:center;font-family:var(--display);font-weight:700;flex:none}
+.wk .tx{flex:1;min-width:0;display:flex;flex-direction:column}.wk .tx b{font-size:16px}.wk .tx small{color:var(--muted);font-size:12.5px}
+.wk .lt{font-family:var(--ruqaa);font-size:22px;color:var(--ink);flex:none;letter-spacing:4px}
+.wk.now{border-color:var(--gold);box-shadow:0 6px 18px rgba(184,134,43,.18)}.wk.now .n{background:var(--gold);color:#1d1406}
+.wk.done .n{background:var(--ok);color:#fff}
+.letters{display:flex;flex-wrap:wrap;justify-content:center;gap:10px}
+.letters span{font-family:var(--ruqaa);font-size:64px;line-height:1.2;color:var(--ink);min-width:74px;text-align:center;background:var(--paper) linear-gradient(to bottom,transparent 62%,var(--red) 62%,var(--red) calc(62% + 2px),transparent calc(62% + 2px));border:1px solid var(--line);border-radius:12px;padding:4px 8px}
+.model{font-family:var(--ruqaa);font-size:36px;color:var(--ink);text-align:center;line-height:1.9;background:repeating-linear-gradient(to bottom,transparent 0 50px,var(--rule) 50px 52px);padding-top:4px}
+ul.list{margin:0;padding-inline-start:20px;display:flex;flex-direction:column;gap:6px}
+.err li::marker{content:"✗  ";color:var(--red)}
+.pad{position:relative;border:1.5px solid var(--line);border-radius:14px;background:var(--paper);overflow:hidden;touch-action:none}
+.pad canvas{display:block;width:100%;height:220px}
+.padbar{display:flex;gap:8px;flex-wrap:wrap}
+.btn{border:0;border-radius:12px;min-height:46px;padding:10px 16px;font-weight:700;cursor:pointer;background:var(--ink);color:var(--on);flex:1}
+.btn.ghost{background:var(--sunk);color:var(--fg)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{border:1.5px solid var(--line);background:var(--paper);border-radius:10px;min-width:48px;min-height:44px;font-family:var(--ruqaa);font-size:24px;cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--on);border-color:var(--ink)}
+.days{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px}
+.days button{min-width:0;padding:0;border:1.5px solid var(--line);background:var(--paper);border-radius:10px;min-height:60px;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:12px;font-weight:600}
+.days button b{font-size:20px;line-height:1}
+.days button[aria-pressed="true"]{background:var(--ok-soft);border-color:var(--ok);color:var(--ok)}
+.meter{height:8px;border-radius:99px;background:var(--sunk);overflow:hidden}.meter i{display:block;height:100%;background:var(--ok);border-radius:99px}
+.note{font-size:13px;color:var(--muted);margin:0}
+.badge{display:flex;align-items:center;gap:10px;background:var(--sunk);border-radius:12px;padding:10px 12px;font-weight:600}
+.badge i{font-style:normal;font-size:26px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+<div class="wrap" id="app"></div>
+<script>
+const D={"weeks":[{"n":0,"k":"pre","t":"القياس القبلي","d":"الأحد 19/6/1448هـ","dg":"29/11/2026م","note":"يكتب الطالب النص الموحد في المدرسة يوم الأحد 19/6/1448هـ، ويقيّمه معلم اللغة العربية ببطاقة التقييم، ثم يبدأ التدريب في المنزل من اليوم نفسه.","days":[],"s":null,"from":"2026-11-29","to":"2026-11-29"},{"n":1,"k":"w","t":"عائلة الباء والنون والياء","L":["ب","ت","ث","ن","ي"],"d":"الأحد 19/6 – الثلاثاء 21/6/1448هـ","dg":"29/11 – 1/12/2026م","tips":["تُكتب الباء والتاء والثاء في الرقعة قصيرة مستقيمة، جالسة على السطر.","النقطتان في الرقعة تُكتبان شرطة صغيرة واحدة، والنقاط الثلاث كقوس صغير مقلوب.","النون في آخر الكلمة تنزل تحت السطر بنصف دائرة، والياء في آخرها ترجع بذيل إلى اليمين."],"err":["إطالة الباء أكثر من اللازم","كتابة النقاط منفصلة بدل الشرطة","رفع الحروف عن السطر"],"words":["بيت","نبات","ثبات","تين","بني"],"s":"التسامح يبني بيننا جسور المحبة","days":["الأحد","الاثنين","الثلاثاء"],"from":"2026-11-29","to":"2026-12-01"},{"n":2,"k":"w","t":"عائلة الجيم والعين","L":["ج","ح","خ","ع","غ"],"d":"الأربعاء 22/6 – الجمعة 24/6/1448هـ","dg":"2 – 4/12/2026م","tips":["رأس الجيم والحاء والخاء يُكتب على السطر بخط مائل قصير، ثم ينزل الجسم تحت السطر.","العين في أول الكلمة رأسها صغير مفتوح، وفي آخرها ينزل ذيلها تحت السطر.","حافظ على تساوي حجم الرؤوس في الكلمة الواحدة."],"err":["تكبير الرأس أكثر من الجسم","إغلاق رأس العين","عدم النزول تحت السطر"],"words":["حج","خير","علم","غيم","جميع"],"s":"العلم نور يضيء طريق الحياة","days":["الأربعاء","الخميس","الجمعة"],"from":"2026-12-02","to":"2026-12-04"},{"n":3,"k":"w","t":"عائلة الدال والراء والواو","L":["د","ذ","ر","ز","و"],"d":"السبت 25/6 – الاثنين 27/6/1448هـ","dg":"5 – 7/12/2026م","tips":["الدال والذال صغيرتان، تجلسان على السطر بزاوية واضحة.","الراء والزاي تنزلان تحت السطر بميل خفيف إلى اليسار.","الواو رأسها دائرة صغيرة على السطر، وذيلها ينزل تحت السطر كالراء."],"err":["كتابة الدال بحجم الراء","رسم الراء أفقية فوق السطر","تكبير رأس الواو"],"words":["ورد","زرع","ذرة","دار","زاد"],"s":"نزرع الورد ليزدان الدار","days":["السبت","الأحد","الاثنين"],"from":"2026-12-05","to":"2026-12-07"},{"n":4,"k":"w","t":"عائلة السين والصاد والطاء","L":["س","ش","ص","ض","ط","ظ"],"d":"الثلاثاء 28/6 – الخميس 1/7/1448هـ","dg":"8 – 10/12/2026م","tips":["السين والشين في الرقعة تُكتبان غالبًا ممدودتين دون أسنان.","رأس الصاد والضاد بيضاوي صغير مائل، يجلس على السطر.","الطاء والظاء رأسهما كالصاد، وعصا قائمة مائلة قليلًا."],"err":["رسم أسنان السين كما في النسخ","تضخيم رأس الصاد","ميل عصا الطاء بشدة"],"words":["شمس","صبر","ضوء","طريق","ظل"],"s":"الصبر طريق النجاح","days":["الثلاثاء","الأربعاء","الخميس"],"from":"2026-12-08","to":"2026-12-10"},{"n":5,"k":"w","t":"عائلة الفاء والكاف واللام والميم","L":["ف","ق","ك","ل","م"],"d":"الجمعة 2/7 – الأحد 4/7/1448هـ","dg":"11 – 13/12/2026م","tips":["الفاء والقاف رأسهما صغير مستدير، والقاف في آخر الكلمة تنزل تحت السطر بنصف دائرة.","اللام قائمة مستقيمة بطول الألف تقريبًا، وفي آخر الكلمة ينزل ذيلها تحت السطر.","الميم دائرة صغيرة على السطر، ولها في آخر الكلمة ذيل قصير ينزل تحت السطر."],"err":["كتابة اللام أقصر من الألف","تكبير دائرة الميم","رفع رأس الفاء عن السطر"],"words":["قلم","فكر","كتاب","لطف","معلم"],"s":"القلم سلاح المتعلم","days":["الجمعة","السبت","الأحد"],"from":"2026-12-11","to":"2026-12-13"},{"n":6,"k":"w","t":"الهاء والألف والربط بين الحروف","L":["ه","ة","ا","لا","ء"],"d":"الاثنين 5/7 – الأربعاء 7/7/1448هـ","dg":"14 – 16/12/2026م","tips":["الألف قائمة مستقيمة، وهي مقياس أطوال الحروف في الكلمة.","لام الألف (لا) تُكتب متصلة بحركة واحدة، بفتحة متساوية بين الجانبين.","اربط الحروف دون رفع القلم قدر الإمكان، وحافظ على مسافات متساوية بين الكلمات."],"err":["تفاوت أطوال الألفات في السطر","مسافات غير متساوية بين الكلمات","تقطيع الكلمة الواحدة"],"words":["هلال","لا","صلاة","مدرسة","سماء"],"s":"وطني أمانة في عنقي وأعتز بهويتي","days":["الاثنين","الثلاثاء","الأربعاء"],"from":"2026-12-14","to":"2026-12-16"},{"n":7,"k":"post","t":"القياس البعدي والمعرض","d":"الخميس 8/7/1448هـ","dg":"17/12/2026م","note":"يوم الخميس 8/7/1448هـ، الموافق اليوم العالمي للغة العربية: يكتب الطالب النص الموحد نفسه ويُقيَّم بالبطاقة نفسها، ويُقام معرض «قلمي هويتي» لعرض كتابة كل طالب قبل التدريب وبعده.","days":[],"s":null,"from":"2026-12-17","to":"2026-12-17"}],"std":"نصٌّ حكيمٌ له سِرٌّ قاطعٌ وذو شأنٍ عظيمٍ، مكتوبٌ على ثوبٍ أخضرَ، ومُغلَّفٌ بجلدٍ أزرق.","crit":["وضوح أشكال الحروف","الالتزام بالسطر","تناسب أحجام الحروف","المسافات بين الحروف والكلمات","النظافة والتنظيم"],"general":["اجلس معتدلًا، وضع الورقة مائلة قليلًا أمامك.","أمسك القلم بين الإبهام والسبابة، واسنده على الوسطى، دون ضغط شديد.","استخدم قلم رصاص أو حبر ناعم وورقة مسطرة.","تدرّب 10 دقائق يوميًا؛ القليل المستمر أنفع من الكثير المتقطع.","اكتب ببطء أولًا، ثم زد سرعتك مع الإتقان."]};
+const LS="khat-v1";let S={log:{}};try{const s=JSON.parse(localStorage.getItem(LS)||"null");if(s&&s.log)S=s}catch(e){}
+const save=()=>{try{localStorage.setItem(LS,JSON.stringify(S))}catch(e){}};
+const $=s=>document.querySelector(s),app=$("#app");
+function today(){const d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")}
+function curWeek(){const t=today();if(t<D.weeks[0].from)return -1;const w=D.weeks.find(x=>x.k==="w"&&x.from<=t&&t<=x.to);if(w)return w.n;return t>D.weeks[6].to?7:-1}
+const DAYS=["أحد","اثنين","ثلاثاء","أربعاء","خميس","جمعة","سبت"];
+function bar(back){return `<header class="top"><b>قلمي هويتي</b>${back?`<button type="button" id="bk">كل التدريبات</button>`:""}</header>`}
+function render(h,back){app.innerHTML=bar(back)+h;const b=$("#bk");if(b)b.onclick=home;window.scrollTo(0,0)}
+const doneDays=n=>(S.log["g"+n]||[]).filter(Boolean).length;
+function home(){const cw=curWeek();
+  render(`<section class="sheet hero"><span class="tag">تدريب منزلي · المرحلة المتوسطة</span><h1>قلمي هويتي</h1><p>برنامج لتحسين خطك بخط الرقعة في ثلاثة أسابيع: ستة تدريبات، في كل تدريب عائلة من الحروف تتدرب عليها في البيت 10 دقائق يوميًا لمدة ثلاثة أيام، وتسجّل تدريبك هنا وفي بطاقتك الورقية.</p>${cw===-1?`<p class="note">يبدأ البرنامج الأحد 19/6/1448هـ (29 نوفمبر 2026م)، وينتهي الخميس 8/7/1448هـ في اليوم العالمي للغة العربية.</p>`:""}</section>
+  ${D.weeks.map(w=>{const pr=w.k==="w";const dn=pr?doneDays(w.n):0;return `<button class="wk ${w.n===cw?"now":""} ${pr&&dn>=3?"done":""}" type="button" data-w="${w.n}"><span class="n">${pr&&dn>=3?"✓":pr?w.n:(w.k==="pre"?"قبل":"بعد")}</span><span class="tx"><b>${pr?"التدريب "+w.n+": ":""}${w.t}</b><small>${w.d}${pr?` · تدربت ${dn} من 3 أيام`:""}${w.n===cw?" · الآن":""}</small></span>${pr?`<span class="lt">${w.L.join("")}</span>`:""}</button>`}).join("")}
+  <section class="sheet"><h3 style="font-size:17px">قبل أن تبدأ</h3><ul class="list">${D.general.map(t=>`<li>${t}</li>`).join("")}</ul></section>`);
+  app.querySelectorAll("[data-w]").forEach(b=>b.onclick=()=>week(+b.dataset.w));
+}
+function week(n){const w=D.weeks.find(x=>x.n===n);
+  if(w.k!=="w"){render(`<section class="sheet hero"><span class="tag">${w.k==="pre"?"بداية البرنامج":"ختام البرنامج"}</span><h1 style="font-size:40px">${w.t}</h1><p>${w.d} (${w.dg})</p></section><section class="sheet"><p style="margin:0">${w.note}</p><h3 style="font-size:16px">النص الموحد</h3><p class="model" style="font-size:28px">${D.std}</p><p class="note">${w.k==="post"?"تدرّب على كتابة هذا النص في البيت قبل موعد القياس البعدي.":"هذا هو النص الذي ستكتبه في القياس القبلي والبعدي."}</p></section>`,true);return}
+  const log=S.log["g"+n]||[0,0,0];const dn=log.filter(Boolean).length;
+  render(`<section class="sheet hero"><span class="tag">التدريب ${w.n} من 6 · ${w.d}</span><h1 style="font-size:38px">${w.t}</h1><div class="letters">${w.L.map(l=>`<span>${l}</span>`).join("")}</div><p class="note">الخط الأحمر هو السطر الذي تجلس عليه الحروف.</p></section>
+  <section class="sheet"><h3 style="font-size:17px">كيف أكتبها بخط الرقعة؟</h3><ul class="list">${w.tips.map(t=>`<li>${t}</li>`).join("")}</ul><h3 style="font-size:16px;color:var(--red)">أخطاء شائعة</h3><ul class="list err">${w.err.map(t=>`<li>${t}</li>`).join("")}</ul></section>
+  <section class="sheet"><h3 style="font-size:17px">نموذج الكلمات والجملة</h3><p class="model">${w.words.join("  ")}</p><p class="model" style="font-size:32px">${w.s}</p><p class="note">انسخ الكلمات ثلاث مرات والجملة مرتين في بطاقتك الورقية.</p></section>
+  <section class="sheet"><h3 style="font-size:17px">تدرّب بإصبعك</h3><p class="note">اختر حرفًا أو كلمة، ثم مرّر إصبعك فوق الشكل الباهت لتتعلم اتجاه الكتابة.</p><div class="chips" id="chs">${[...w.L,...w.words.slice(0,3)].map((t,i)=>`<button type="button" class="chip" data-t="${t}" aria-pressed="${i===0}">${t}</button>`).join("")}</div>
+   <div class="pad"><canvas id="cv" aria-label="لوحة التتبع"></canvas></div><div class="padbar"><button class="btn ghost" id="clr" type="button">امسح</button></div></section>
+  <section class="sheet"><h3 style="font-size:17px">سجل تدريبي في البيت</h3><p class="note">اضغط على اليوم الذي تدربت فيه 10 دقائق. الهدف الأيام الثلاثة كلها، ولا تنس توقيع ولي أمرك في البطاقة الورقية.</p>
+   <div class="days" style="grid-template-columns:repeat(3,minmax(0,1fr))">${w.days.map((d,i)=>`<button type="button" data-d="${i}" aria-pressed="${!!log[i]}"><b>${log[i]?"✓":"·"}</b>${d}</button>`).join("")}</div><div class="meter"><i style="width:${Math.min(100,dn/3*100)}%"></i></div>
+   ${dn>=3?`<div class="badge"><i aria-hidden="true">🖋</i>أحسنت! أكملت هذا التدريب. انتقل إلى التدريب التالي في موعده.</div>`:`<p class="note">تدربت ${dn} من 3 أيام.</p>`}</section>`,true);
+  app.querySelectorAll("[data-d]").forEach(b=>b.onclick=()=>{const L=S.log["g"+n]||[0,0,0];L[+b.dataset.d]=L[+b.dataset.d]?0:1;S.log["g"+n]=L;save();const y=scrollY;week(n);window.scrollTo(0,y)});
+  setupPad(w.L[0]);app.querySelectorAll("[data-t]").forEach(b=>b.onclick=()=>{app.querySelectorAll("[data-t]").forEach(x=>x.setAttribute("aria-pressed",x===b));setupPad(b.dataset.t)});
+}
+let padT="";
+function setupPad(t){padT=t;const cv=$("#cv");const dpr=window.devicePixelRatio||1;const r=cv.getBoundingClientRect();cv.width=r.width*dpr;cv.height=r.height*dpr;const c=cv.getContext("2d");c.scale(dpr,dpr);
+  const css=getComputedStyle(document.documentElement);const draw=()=>{c.clearRect(0,0,r.width,r.height);const base=r.height*0.66;c.strokeStyle=css.getPropertyValue("--red").trim();c.lineWidth=1.5;c.beginPath();c.moveTo(12,base);c.lineTo(r.width-12,base);c.stroke();
+    c.fillStyle=css.getPropertyValue("--line").trim();const fs=t.length>2?Math.min(110,r.width/(t.length*0.75)):150;c.font=`700 ${fs}px "Aref Ruqaa", serif`;c.textAlign="center";c.textBaseline="alphabetic";c.direction="rtl";c.fillText(t,r.width/2,base)};
+  (document.fonts&&document.fonts.load?document.fonts.load('700 100px "Aref Ruqaa"'):Promise.resolve()).then(draw,draw);draw();
+  let down=false,last=null;const pos=e=>{const b=cv.getBoundingClientRect();return [e.clientX-b.left,e.clientY-b.top]};
+  cv.onpointerdown=e=>{down=true;last=pos(e);cv.setPointerCapture(e.pointerId)};cv.onpointermove=e=>{if(!down)return;const p=pos(e);c.strokeStyle=css.getPropertyValue("--ink").trim();c.lineWidth=6;c.lineCap="round";c.lineJoin="round";c.beginPath();c.moveTo(...last);c.lineTo(...p);c.stroke();last=p};
+  cv.onpointerup=cv.onpointercancel=()=>{down=false};$("#clr").onclick=draw;
+}
+home();
+</script>
+</body></html>
