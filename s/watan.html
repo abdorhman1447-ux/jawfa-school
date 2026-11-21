@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="robots" content="noindex"><style>body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style></head><body>
+<title>مبادرة درب وطن للمرحلة المتوسطة</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Reem+Kufi:wght@500;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: one-column phone game; a vertical "trail" map of seven stations, full-screen question cards. */
+:root{
+  --bg:#EEF3EF; --surface:#FFFFFF; --sunk:#E1E9E3; --line:#CCD9D0; --fg:#14281F; --muted:#56695E;
+  --green:#0D6B4C; --green-2:#0A5A40; --gold:#B7862A; --gold-soft:#F6EBD3; --ok:#1C7C45; --ok-soft:#DDF1E5; --bad:#B42323; --bad-soft:#FBE5E5;
+  --on:#FFFFFF; --shadow:0 10px 26px rgba(13,60,40,.14);
+  --display:"Reem Kufi","IBM Plex Sans Arabic",Tahoma,sans-serif; --body:"IBM Plex Sans Arabic",Tahoma,"Segoe UI",sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#0B1612;--surface:#13221C;--sunk:#1B2E26;--line:#28423A;--fg:#E5EEE9;--muted:#9AB0A4;--green:#4CC191;--green-2:#3AA87C;--gold:#E2B456;--gold-soft:#33291A;--ok:#62D291;--ok-soft:#11301F;--bad:#F28585;--bad-soft:#381A1A;--on:#08130E;--shadow:0 10px 26px rgba(0,0,0,.45);color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0B1612;--surface:#13221C;--sunk:#1B2E26;--line:#28423A;--fg:#E5EEE9;--muted:#9AB0A4;--green:#4CC191;--green-2:#3AA87C;--gold:#E2B456;--gold-soft:#33291A;--ok:#62D291;--ok-soft:#11301F;--bad:#F28585;--bad-soft:#381A1A;--on:#08130E;--shadow:0 10px 26px rgba(0,0,0,.45);color-scheme:dark}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:16px;line-height:1.6;direction:rtl;min-height:100vh}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--green)}
+button,input,select{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+h1,h2,h3{font-family:var(--display);margin:0;text-wrap:balance;font-weight:700}
+.wrap{max-width:560px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 40px;display:flex;flex-direction:column;gap:16px}
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--green);color:#fff;margin-inline:calc(-1*max(16px,env(safe-area-inset-left,0px)));padding:10px max(16px,env(safe-area-inset-right,0px)) 10px max(16px,env(safe-area-inset-left,0px));display:flex;align-items:center;gap:10px}
+.top b{font-family:var(--display);font-size:20px;flex:1}
+.pts{background:rgba(255,255,255,.16);border-radius:99px;padding:3px 12px;font-weight:700;font-variant-numeric:tabular-nums;font-size:14px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:18px;display:flex;flex-direction:column;gap:12px}
+.hero{text-align:center;align-items:center;padding-block:26px 20px}
+.hero h1{font-size:40px;color:var(--green);line-height:1.2}
+.hero p{margin:0;color:var(--muted)}
+.emb{width:84px;height:84px;border-radius:50%;background:var(--green);display:grid;place-items:center;color:#fff;font-size:40px;box-shadow:var(--shadow)}
+label{font-weight:600;font-size:14px;color:var(--muted)}
+.f{display:flex;flex-direction:column;gap:6px}
+input,select{border:1.5px solid var(--line);background:var(--bg);border-radius:12px;padding:12px 14px;min-height:50px;font-size:16px;width:100%}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.seg{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.seg button{border:1.5px solid var(--line);background:var(--surface);border-radius:12px;min-height:50px;font-weight:700;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--green);border-color:var(--green);color:var(--on)}
+.btn{border:0;border-radius:14px;min-height:54px;padding:12px 18px;font-weight:700;font-size:17px;cursor:pointer;background:var(--green);color:var(--on);display:inline-flex;align-items:center;justify-content:center;gap:8px;text-decoration:none}
+.btn:active{transform:scale(.98)}
+.btn.gold{background:var(--gold);color:#1d1406}
+.btn.ghost{background:var(--sunk);color:var(--fg)}
+.btn[disabled]{opacity:.5;cursor:not-allowed}
+.err{color:var(--bad);font-size:14px;margin:0}
+.note{font-size:13px;color:var(--muted);margin:0}
+/* trail map */
+.trail{position:relative;display:flex;flex-direction:column;gap:14px;padding:6px 0}
+.trail::before{content:"";position:absolute;top:30px;bottom:30px;right:37px;width:4px;background:repeating-linear-gradient(to bottom,var(--gold) 0 10px,transparent 10px 18px);border-radius:4px}
+.stn{position:relative;display:flex;align-items:center;gap:14px;background:var(--surface);border:1.5px solid var(--line);border-radius:18px;padding:12px 14px;cursor:pointer;text-align:right;width:100%}
+.stn .ic{width:48px;height:48px;border-radius:50%;flex:none;display:grid;place-items:center;font-size:22px;background:var(--sunk);border:3px solid var(--surface);box-shadow:0 0 0 2px var(--line);z-index:1}
+.stn .tx{flex:1;min-width:0;display:flex;flex-direction:column}
+.stn .tx b{font-family:var(--display);font-size:17px}
+.stn .tx small{color:var(--muted);font-size:13px}
+.stn .st{font-size:13px;font-weight:700;flex:none;text-align:center;min-width:52px}
+.stn.done{border-color:var(--ok)}.stn.done .ic{background:var(--ok-soft);box-shadow:0 0 0 2px var(--ok)}
+.stn.next{border-color:var(--gold);box-shadow:var(--shadow)}.stn.next .ic{background:var(--gold-soft);box-shadow:0 0 0 2px var(--gold)}
+.stn[disabled]{opacity:.55;cursor:not-allowed}
+.stars{color:var(--gold);letter-spacing:1px}
+.prog{height:8px;border-radius:99px;background:var(--sunk);overflow:hidden}.prog i{display:block;height:100%;background:var(--gold);border-radius:99px;transition:width .3s}
+/* question */
+.qh{display:flex;align-items:center;justify-content:space-between;font-size:13px;color:var(--muted);font-weight:600}
+.timer{font-variant-numeric:tabular-nums}
+.q{font-size:19px;font-weight:700;line-height:1.55}
+.tag{align-self:flex-start;font-size:12px;font-weight:700;background:var(--gold-soft);color:var(--gold);border-radius:99px;padding:2px 10px}
+.opts{display:flex;flex-direction:column;gap:10px}
+.opt{border:2px solid var(--line);background:var(--surface);border-radius:14px;padding:14px;min-height:56px;text-align:right;font-weight:600;cursor:pointer;font-size:16px}
+.opt:hover{border-color:var(--green)}
+.opt.ok{border-color:var(--ok);background:var(--ok-soft)}.opt.no{border-color:var(--bad);background:var(--bad-soft)}
+.opt[disabled]{cursor:default}
+.fb{border-radius:14px;padding:12px 14px;font-size:15px}.fb.ok{background:var(--ok-soft)}.fb.no{background:var(--bad-soft)}
+.fb b{display:block;font-family:var(--display);font-size:17px}
+.badges{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+.badge{display:flex;flex-direction:column;align-items:center;gap:2px;width:74px;font-size:11px;text-align:center;color:var(--muted)}
+.badge span{width:52px;height:52px;border-radius:50%;display:grid;place-items:center;font-size:24px;background:var(--sunk);filter:grayscale(1);opacity:.5}
+.badge.on span{background:var(--gold-soft);filter:none;opacity:1;box-shadow:0 0 0 2px var(--gold)}
+.cert{border:3px double var(--gold);text-align:center;align-items:center;background:linear-gradient(var(--surface),var(--surface)) padding-box}
+.cert h2{color:var(--green);font-size:26px}
+.big{font-family:var(--display);font-size:44px;color:var(--green);line-height:1;font-variant-numeric:tabular-nums}
+.cmp{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;width:100%}
+.cmp div{background:var(--sunk);border-radius:12px;padding:8px;text-align:center}.cmp small{display:block;color:var(--muted);font-size:12px}.cmp b{font-family:var(--display);font-size:22px;font-variant-numeric:tabular-nums}
+.code{direction:ltr;font-family:ui-monospace,Menlo,monospace;font-size:12px;background:var(--sunk);border-radius:10px;padding:10px;word-break:break-all;user-select:all}
+.pop{animation:pop .5s ease}@keyframes pop{0%{transform:scale(.9);opacity:.4}60%{transform:scale(1.04)}100%{transform:none;opacity:1}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+.imq{border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin:0;min-width:0}
+.imq legend{font-weight:700;padding:0 4px;font-size:15px;line-height:1.6}
+.imq legend span{color:var(--muted);margin-inline-end:6px}
+.imo{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin-top:6px}
+.imo button{font:inherit;font-size:13px;padding:10px 2px;border-radius:10px;border:1.5px solid var(--line);background:transparent;color:inherit;cursor:pointer}
+.imo button[data-v="3"][aria-pressed="true"]{background:#1F8A4C;border-color:#1F8A4C;color:#fff;font-weight:700}
+.imo button[data-v="2"][aria-pressed="true"]{background:#C98A12;border-color:#C98A12;color:#fff;font-weight:700}
+.imo button[data-v="1"][aria-pressed="true"]{background:#C0392B;border-color:#C0392B;color:#fff;font-weight:700}
+.iml{display:block;font-weight:600;font-size:14px}.iml textarea,.iml input,.iml select{width:100%;box-sizing:border-box;margin-top:4px;font:inherit;font-weight:400;border:1px solid var(--line);border-radius:10px;padding:9px;background:transparent;color:inherit}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.as{border-radius:12px;padding:10px 12px;font-weight:700;font-size:14px;background:var(--sunk);line-height:1.6}.as.ok{background:#1F8A4C;color:#fff}.as.off{font-weight:600;color:var(--muted)}</style>
+<div class="wrap" id="app"></div>
+<script>
+const D={"st":[{"id":"hw","t":"الهوية والرموز","ic":"🏳","d":"العلم، والشعار، والنشيد، والمناسبات الوطنية","m":[{"q":"ما المعنى الذي يرمز إليه السيف في العلم السعودي؟","o":["القوة والعدل","الحرب والقتال","الزينة فقط"],"a":0,"e":"السيف في العلم يرمز إلى القوة والعدل وحماية الوطن."},{"q":"بدأ عزف السلام الملكي في الطابور وأنت تتحدث مع زميلك. ماذا تفعل؟","o":["أكمل حديثي بصوت منخفض","أتوقف وأقف باحترام حتى ينتهي","أجلس حتى ينتهي"],"a":1,"e":"احترام السلام الملكي يكون بالوقوف والصمت حتى انتهائه."},{"q":"«العلم السعودي لا يُنكّس أبدًا لأنه يحمل كلمة التوحيد». صح أم خطأ؟","o":["صح","خطأ"],"a":0,"e":"لا يُنكّس العلم السعودي احترامًا لشهادة التوحيد المكتوبة عليه."},{"q":"يوافق اليوم الوطني للمملكة العربية السعودية:","o":["22 فبراير","23 سبتمبر","2 أبريل"],"a":1,"e":"اليوم الوطني في 23 سبتمبر ذكرى توحيد المملكة عام 1932م، أما 22 فبراير فهو يوم التأسيس."}]},{"id":"hq","t":"الحقوق والواجبات","ic":"⚖","d":"ما لي وما عليّ في المدرسة والمجتمع","m":[{"q":"من حقك في المدرسة أن تتعلم في بيئة آمنة. ما الواجب الذي يقابل هذا الحق؟","o":["أن أحترم زملائي ولا أوذيهم","أن أحضر متى شئت","أن أختار معلمي"],"a":0,"e":"كل حق يقابله واجب: حقي في الأمان يقابله واجبي في عدم إيذاء غيري."},{"q":"تأخرت في تسليم واجبك ووجّهك المعلم. ما التصرف الصحيح؟","o":["أجادل المعلم أمام الطلاب","أعتذر وألتزم بالتسليم في المرة القادمة","ألقي اللوم على زميلي"],"a":1,"e":"تحمّل المسؤولية والاعتذار من واجبات الطالب."},{"q":"«الالتزام بالأنظمة يحمي حقوقي وحقوق الآخرين». صح أم خطأ؟","o":["صح","خطأ"],"a":0,"e":"الأنظمة وُضعت لتنظيم الحقوق وحمايتها للجميع."},{"q":"رأيت زميلًا يتعرض للتنمر في الفسحة. ما واجبك؟","o":["أضحك مع الآخرين","أبتعد وكأنني لم أر شيئًا","أطلب المساعدة من المعلم المناوب أو الموجه"],"a":2,"e":"إبلاغ الكبار عن التنمر واجب يحمي زميلك ويوقف الأذى."}]},{"id":"mr","t":"المرافق العامة","ic":"🏛","d":"المحافظة على الممتلكات والبيئة والنظافة","m":[{"q":"وجدت صنبور المياه في دورة المياه مفتوحًا. ماذا تفعل؟","o":["أتركه فليس مسؤوليتي","أغلقه، وأبلغ إن كان معطلًا","ألعب بالماء قليلًا"],"a":1,"e":"المحافظة على الماء والمرافق مسؤولية كل واحد منا."},{"q":"رأيت زميلًا يكتب على طاولة الفصل. ما التصرف الأنسب؟","o":["أنصحه بلطف أن الطاولة ملك للجميع","أكتب بجانبه","أصوّره وأنشر الصورة"],"a":0,"e":"النصيحة اللطيفة تحمي المرفق وتحفظ كرامة زميلك."},{"q":"«رمي المخلفات في الحدائق العامة لا يضر لأن هناك عمال نظافة». صح أم خطأ؟","o":["صح","خطأ"],"a":1,"e":"نظافة المكان العام مسؤولية الجميع، وعمال النظافة يساندوننا ولا يُعفوننا من المسؤولية."},{"q":"بعد الأكل في الفسحة، أين تضع المخلفات؟","o":["أتركها على الطاولة","في سلة المهملات","تحت المقعد"],"a":1,"e":"وضع المخلفات في مكانها عادة يومية تعكس احترامك لمدرستك."}]},{"id":"rq","t":"المواطنة الرقمية","ic":"📱","d":"الشائعات، والخصوصية، والتنمر الإلكتروني","m":[{"q":"وصلتك رسالة: «غدًا إجازة رسمية، انشرها لكل أصدقائك». ماذا تفعل؟","o":["أنشرها فورًا","أتحقق من المصدر الرسمي قبل النشر","أضيف عليها تفاصيل"],"a":1,"e":"لا تنشر أي خبر قبل التحقق منه من المصدر الرسمي."},{"q":"طلب منك شخص لا تعرفه في لعبة إلكترونية صورتك ورقم جوالك. ما التصرف الصحيح؟","o":["أرسلها لأنه لطيف","أرفض وأخبر والديّ","أرسل الرقم فقط"],"a":1,"e":"بياناتك الشخصية أمانة، ولا تشاركها مع الغرباء، وأخبر والديك."},{"q":"«كتابة تعليق جارح عن زميل في مجموعة الصف مزاح عادي». صح أم خطأ؟","o":["صح","خطأ"],"a":1,"e":"الإساءة في الإنترنت تنمر إلكتروني يؤذي كما يؤذي التنمر وجهًا لوجه."},{"q":"أي كلمة مرور أقوى؟","o":["123456","اسمي وتاريخ ميلادي","مزيج طويل من حروف وأرقام ورموز"],"a":2,"e":"كلمة المرور القوية طويلة ومتنوعة ولا تُشارك مع أحد."}]},{"id":"nz","t":"الأنظمة والسلامة","ic":"🚦","d":"المرور، والأمن، والإبلاغ عن الخطر","m":[{"q":"عند عبور الشارع أمام المدرسة، أين تعبر؟","o":["من أي مكان قريب","من ممر المشاة بعد التأكد من خلو الطريق","بين السيارات المتوقفة"],"a":1,"e":"ممر المشاة والتأكد من الطريق يحميانك من الحوادث."},{"q":"«ربط حزام الأمان واجب على الراكب في المقعد الخلفي أيضًا». صح أم خطأ؟","o":["صح","خطأ"],"a":0,"e":"حزام الأمان يحمي جميع الركاب، في المقاعد الأمامية والخلفية."},{"q":"اشتعل حريق صغير في معمل المدرسة. ما أول ما تفعله؟","o":["أحاول إطفاءه وحدي","أبلغ المعلم فورًا وأتبع خطة الإخلاء","أصوّر الحريق"],"a":1,"e":"الإبلاغ الفوري واتباع خطة الإخلاء يحفظان الأرواح."},{"q":"رقم الطوارئ الموحد في المملكة هو:","o":["911","100","123"],"a":0,"e":"الرقم الموحد للطوارئ 911."}]},{"id":"tw","t":"التطوع وخدمة المجتمع","ic":"🤝","d":"المبادرة ومساعدة الآخرين","m":[{"q":"رأيت رجلًا كبيرًا في السن يحمل أغراضًا ثقيلة أمام المسجد. ماذا تفعل؟","o":["أكمل طريقي","أبادر بمساعدته بأدب","أنتظر أن يساعده غيري"],"a":1,"e":"المبادرة بمساعدة الآخرين من أجمل صور خدمة المجتمع."},{"q":"«العمل التطوعي يكون فقط للكبار». صح أم خطأ؟","o":["صح","خطأ"],"a":1,"e":"يستطيع الطالب أن يتطوع في مدرسته وحيّه بما يناسب عمره."},{"q":"أي هذه الأعمال يُعد تطوعًا في المدرسة؟","o":["المشاركة في تنظيم فعالية مدرسية","الخروج من الحصة دون إذن","إكمال واجبي فقط"],"a":0,"e":"تنظيم الفعاليات ومساعدة الزملاء أعمال تطوعية مفيدة."},{"q":"ما الفائدة التي يحصل عليها المتطوع نفسه؟","o":["لا فائدة له","يكتسب مهارات وأصدقاء وأجرًا وشعورًا بالرضا","يضيّع وقته"],"a":1,"e":"التطوع ينمي المهارات والشخصية، وينفع المتطوع قبل غيره."}]},{"id":"wt","t":"وطن طموح","ic":"🌟","d":"رؤية 2030 ومنجزات المملكة","m":[{"q":"في أي عام أُعلنت رؤية المملكة 2030؟","o":["2010","2016","2020"],"a":1,"e":"أُعلنت رؤية المملكة 2030 عام 2016م."},{"q":"كيف يسهم الطالب في تحقيق رؤية 2030؟","o":["بالاجتهاد في دراسته وتطوير مهاراته","بانتظار التخرج فقط","لا يستطيع الإسهام"],"a":0,"e":"الطالب المجتهد اليوم هو صانع الإنجاز غدًا."},{"q":"«من أهداف الرؤية تنويع الاقتصاد وعدم الاعتماد على النفط وحده». صح أم خطأ؟","o":["صح","خطأ"],"a":0,"e":"تنويع مصادر الدخل من أبرز أهداف الرؤية."},{"q":"أي هذه المشروعات من مشروعات رؤية 2030؟","o":["نيوم","سد مأرب","قناة السويس"],"a":0,"e":"نيوم من المشروعات الكبرى لرؤية 2030 في شمال غرب المملكة."}]}],"pre":{"m":[{"q":"لون العلم السعودي هو:","o":["الأخضر","الأحمر","الأزرق"],"a":0},{"q":"من واجبات الطالب في المدرسة:","o":["احترام المعلمين والزملاء","الغياب دون عذر","العبث بالممتلكات"],"a":0},{"q":"رأيت زميلًا يكسر كرسيًا في الفصل. ماذا تفعل؟","o":["أنصحه وأبلغ المعلم إن لزم","أشاركه","أتجاهل"],"a":0},{"q":"وصلتك رسالة غير مؤكدة المصدر. ماذا تفعل؟","o":["أتحقق قبل النشر","أنشرها فورًا","أضيف عليها"],"a":0},{"q":"عند عبور الشارع أعبر من:","o":["ممر المشاة","أي مكان","بين السيارات"],"a":0},{"q":"التطوع هو:","o":["عمل خيّر دون مقابل لخدمة الآخرين","عمل بأجر","واجب منزلي"],"a":0},{"q":"رؤية المملكة 2030 تهدف إلى:","o":["بناء مستقبل أفضل للوطن والمواطن","إيقاف التنمية","الاعتماد على النفط فقط"],"a":0}]},"post":{"m":[{"q":"يرمز السيف في العلم السعودي إلى:","o":["القوة والعدل","الزينة","الحرب"],"a":0},{"q":"حقي في التعلم الآمن يقابله واجب:","o":["احترام الآخرين وعدم إيذائهم","الحضور متى شئت","لا شيء"],"a":0},{"q":"وجدت صنبورًا مفتوحًا في المدرسة:","o":["أغلقه وأبلغ إن كان معطلًا","أتركه","ألعب بالماء"],"a":0},{"q":"طلب غريب في لعبة إلكترونية رقم جوالي:","o":["أرفض وأخبر والديّ","أرسله","أرسل صورتي بدلًا منه"],"a":0},{"q":"رقم الطوارئ الموحد:","o":["911","100","123"],"a":0},{"q":"رأيت كبيرًا في السن يحمل أغراضًا ثقيلة:","o":["أبادر بمساعدته","أكمل طريقي","أنتظر غيري"],"a":0},{"q":"أعلنت رؤية 2030 عام:","o":["2016","2010","2020"],"a":0}]}};
+const SALT="jwf1448";
+const LS="watan-v1";
+let S=load();
+function load(){try{const s=JSON.parse(localStorage.getItem(LS)||"null");if(s&&s.v===1)return s}catch(e){}return {v:1,name:"",stage:"",grade:"",cls:"",pre:null,post:null,st:{},pts:0,startedAt:0}}
+function save(){try{localStorage.setItem(LS,JSON.stringify(S))}catch(e){}}
+const $=s=>document.querySelector(s);const app=$("#app");
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const lvl=()=>"m";
+const stageName=()=>"المتوسطة";
+function shuffleOpts(item){const idx=item.o.map((_,i)=>i);for(let i=idx.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[idx[i],idx[j]]=[idx[j],idx[i]]}if(item.o.length===2&&(item.o[0]==="صح"))return {...item};return {...item,o:idx.map(i=>item.o[i]),a:idx.indexOf(item.a)}}
+function topBar(){return `<header class="top"><b>درب وطن</b>${S.name?`<span class="pts" aria-label="النقاط">★ ${S.pts}</span>`:""}</header>`}
+function doneCount(){return D.st.filter(s=>S.st[s.id]).length}
+/* ---------- screens ---------- */
+function home(){
+  if(!S.name) return register();
+  if(!S.pre) return intro("pre");
+  if(doneCount()===7&&!S.post) return intro("post");
+  if(S.post) return result();
+  return map();
+}
+function register(err){
+  app.innerHTML=topBar()+`<section class="card hero"><div class="emb" aria-hidden="true">🌴</div><h1>مبادرة درب وطن</h1><p class="note" style="font-weight:700;color:var(--gold);font-size:16px">للمرحلة المتوسطة</p><p>رحلة في سبع محطات تختبر فيها مواطنتك بالمواقف والتحديات، وتجمع النقاط والأوسمة حتى تنال وسام المواطن الفاعل.</p></section>
+  <form class="card" id="reg" novalidate>
+    <h2 style="font-size:20px">سجّل بياناتك لتبدأ</h2>
+    <div class="f"><label for="nm">الاسم الثلاثي</label><input id="nm" autocomplete="name" value="${esc(S.name)}" placeholder="مثال: محمد أحمد الزهراني"></div>
+    <div class="row2"><div class="f"><label for="gr">الصف</label><select id="gr" data-v="${esc(S.grade)}"><option value="">اختر</option><option>الأول المتوسط</option><option>الثاني المتوسط</option><option>الثالث المتوسط</option></select></div>
+    <div class="f"><label for="cl">الفصل</label><select id="cl" data-v="${esc(S.cls)}"><option value="">اختر</option><option>1</option><option>2</option></select></div></div>
+    ${err?`<p class="err" role="alert">${err}</p>`:""}
+    <button class="btn" type="submit">ابدأ الرحلة</button>
+    <p class="note">يُستخدم اسمك لإرسال نتيجتك إلى رائد النشاط فقط.</p></form>`;
+  const stg="m";app.querySelectorAll("select[data-v]").forEach(x=>{if(x.dataset.v)x.value=x.dataset.v});
+  $("#reg").onsubmit=e=>{e.preventDefault();const n=$("#nm").value.trim().replace(/\s+/g," "),g=$("#gr").value,c=$("#cl").value;
+    if(n.split(" ").length<3) return register("اكتب اسمك الثلاثي.");
+if(!g||!c) return register("اختر الصف والفصل.");
+    Object.assign(S,{name:n,stage:stg,grade:g,cls:c,startedAt:Date.now()});save();home()};
+}
+function intro(kind){
+  const pre=kind==="pre";
+  app.innerHTML=topBar()+`<section class="card hero pop"><div class="emb" aria-hidden="true">${pre?"🧭":"🏆"}</div><h2 style="font-size:26px">${pre?"اختبار البداية":"التحدي الختامي"}</h2>
+  <p>${pre?`أهلًا ${esc(S.name.split(" ")[0])}! قبل أن تبدأ الرحلة، أجب عن سبعة أسئلة قصيرة لنعرف نقطة انطلاقك. لن تظهر الإجابات الصحيحة الآن.`:`أحسنت! أنهيت المحطات السبع. بقي التحدي الختامي: سبعة أسئلة تقيس ما تعلمته في الرحلة، ثم تحصل على وسامك وشهادتك.`}</p>
+  <button class="btn ${pre?"":"gold"}" id="go" type="button">${pre?"ابدأ الاختبار":"ابدأ التحدي"}</button></section>`;
+  $("#go").onclick=()=>quiz(kind);
+}
+function quiz(kind){
+  const items=D[kind][lvl()].map(shuffleOpts);let i=0;const ans=[];
+  const step=()=>{const it=items[i];
+    app.innerHTML=topBar()+`<section class="card pop"><div class="qh"><span>${kind==="pre"?"اختبار البداية":"التحدي الختامي"}</span><span>${i+1} / ${items.length}</span></div><div class="prog"><i style="width:${i/items.length*100}%"></i></div>
+    <span class="tag">${D.st[i].t}</span><p class="q">${esc(it.q)}</p><div class="opts">${it.o.map((o,k)=>`<button class="opt" type="button" data-k="${k}">${esc(o)}</button>`).join("")}</div></section>`;
+    app.querySelectorAll(".opt").forEach(b=>b.onclick=()=>{ans.push(+b.dataset.k===it.a?1:0);i++;if(i<items.length) step();else{S[kind]=ans;if(kind==="post"){S.pts+=ans.reduce((a,b)=>a+b,0)*10;S.finishedAt=Date.now()}save();kind==="pre"?mapIntro():result(true)}})};
+  step();
+}
+function mapIntro(){app.innerHTML=topBar()+`<section class="card hero pop"><div class="emb" aria-hidden="true">🗺</div><h2 style="font-size:24px">انطلقت رحلتك</h2><p>أمامك سبع محطات. في كل محطة أربعة تحديات، ولكل إجابة صحيحة 10 نقاط، و5 نقاط إضافية إذا أجبت خلال 15 ثانية. أجب عن 3 تحديات على الأقل لتنال وسام المحطة.</p><button class="btn" id="go" type="button">إلى الخريطة</button></section>`;$("#go").onclick=map}
+function stars(n){return "★".repeat(n)+"☆".repeat(4-n)}
+function map(){
+  const nextI=D.st.findIndex(s=>!S.st[s.id]);const dc=doneCount();
+  app.innerHTML=topBar()+`<section class="card"><div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><div><b style="font-family:var(--display);font-size:18px">${esc(S.name.split(" ")[0])}، ${esc(S.grade)}</b><p class="note">أنجزت ${dc} من 7 محطات</p></div><span class="big" style="font-size:30px">${dc}/7</span></div><div class="prog"><i style="width:${dc/7*100}%"></i></div></section>
+  <nav class="trail" aria-label="محطات الرحلة">${D.st.map((s,i)=>{const r=S.st[s.id];const locked=!r&&i>nextI;
+    return `<button class="stn ${r?"done":i===nextI?"next":""}" type="button" data-st="${i}" ${locked?"disabled":""}><span class="ic" aria-hidden="true">${r?"✓":s.ic}</span><span class="tx"><b>${i+1}. ${s.t}</b><small>${s.d}</small></span><span class="st">${r?`<span class="stars" aria-label="${r.c} من 4">${stars(r.c)}</span>`:locked?"🔒":"ابدأ"}</span></button>`}).join("")}</nav>
+  <section class="card"><h3 style="font-size:17px">أوسمتك</h3><div class="badges">${D.st.map(s=>`<div class="badge ${S.st[s.id]&&S.st[s.id].c>=3?"on":""}"><span aria-hidden="true">${s.ic}</span>${s.t}</div>`).join("")}</div></section>
+  <section class="card"><p class="note">تستطيع إرسال تقدمك الآن إلى رائد النشاط، وسترسل نتيجتك النهائية بعد التحدي الختامي.</p><button class="btn ghost" id="snd" type="button">إرسال تقدمي</button></section>`;
+  app.querySelectorAll("[data-st]").forEach(b=>b.onclick=()=>station(+b.dataset.st));
+  $("#snd").onclick=()=>sendView(false);
+}
+function station(si){
+  const s=D.st[si];const items=s[lvl()].map(shuffleOpts);let i=0,c=0,pts=0,t0=0,tmr=null;
+  const step=()=>{const it=items[i];t0=Date.now();
+    app.innerHTML=topBar()+`<section class="card pop"><div class="qh"><span>${s.ic} ${s.t}</span><span class="timer" id="tm">15</span></div><div class="prog"><i style="width:${i/items.length*100}%"></i></div>
+    <span class="tag">${it.o.length===2?"صح أم خطأ؟":"ماذا تختار؟"}</span><p class="q">${esc(it.q)}</p><div class="opts">${it.o.map((o,k)=>`<button class="opt" type="button" data-k="${k}">${esc(o)}</button>`).join("")}</div><div id="fb"></div></section>`;
+    clearInterval(tmr);tmr=setInterval(()=>{const left=Math.max(0,15-Math.floor((Date.now()-t0)/1000));const el=$("#tm");if(el) el.textContent=left;if(!left)clearInterval(tmr)},250);
+    app.querySelectorAll(".opt").forEach(b=>b.onclick=()=>{clearInterval(tmr);const k=+b.dataset.k,ok=k===it.a,fast=(Date.now()-t0)<15000;
+      if(ok){c++;pts+=10+(fast?5:0)}
+      app.querySelectorAll(".opt").forEach(x=>{x.disabled=true;if(+x.dataset.k===it.a)x.classList.add("ok")});if(!ok)b.classList.add("no");
+      $("#fb").innerHTML=`<div class="fb ${ok?"ok":"no"}" role="status"><b>${ok?(fast?"أحسنت! +15":"أحسنت! +10"):"ليست الإجابة الأفضل"}</b>${esc(it.e)}</div><button class="btn" id="nx" type="button" style="width:100%;margin-top:10px">${i+1<items.length?"التالي":"إنهاء المحطة"}</button>`;
+      $("#nx").onclick=()=>{i++;if(i<items.length) step();else finish()};$("#nx").focus()})};
+  const finish=()=>{const prev=S.st[s.id];if(!prev||c>prev.c){S.pts+=pts-(prev?prev.p:0);S.st[s.id]={c,p:pts}}save();
+    app.innerHTML=topBar()+`<section class="card hero pop"><div class="emb" aria-hidden="true" style="background:${c>=3?"var(--gold)":"var(--green)"}">${c>=3?s.ic:"💪"}</div><h2 style="font-size:24px">${c>=3?"نلت وسام "+s.t:"أنهيت المحطة"}</h2><p class="stars" style="font-size:28px">${stars(c)}</p><p>${c} إجابات صحيحة من 4 · ${pts} نقطة</p>${c<3?`<p class="note">أعد المحطة لتحصل على الوسام، وستُحسب أفضل نتيجة لك.</p>`:""}
+    <div style="display:flex;flex-direction:column;gap:8px;width:100%"><button class="btn" id="bk" type="button">${doneCount()===7?"إلى التحدي الختامي":"إلى الخريطة"}</button>${c<3?`<button class="btn ghost" id="rt" type="button">أعد المحطة</button>`:""}</div></section>`;
+    $("#bk").onclick=home;const rt=$("#rt");if(rt) rt.onclick=()=>station(si)};
+  step();
+}
+function sum(a){return a?a.reduce((x,y)=>x+y,0):null}
+function result(fresh){
+  const pre=sum(S.pre),post=sum(S.post),imp=pre!=null&&post!=null?post-pre:null;const allB=D.st.filter(s=>S.st[s.id]&&S.st[s.id].c>=3).length;
+  app.innerHTML=topBar()+`<section class="card cert ${fresh?"pop":""}"><div class="emb" aria-hidden="true" style="background:var(--gold)">🏅</div><p class="note">شهادة إتمام درب وطن</p><h2>${allB>=6?"وسام المواطن الفاعل":"وسام المواطن المجتهد"}</h2><p style="margin:0;font-weight:700;font-size:19px">${esc(S.name)}</p><p class="note">الصف ${esc(S.grade)} · الفصل ${esc(S.cls)}</p>
+  <div class="cmp"><div><small>اختبار البداية</small><b>${pre}/7</b></div><div><small>التحدي الختامي</small><b>${post}/7</b></div><div><small>التحسن</small><b dir="ltr">${imp>0?"+":""}${imp}</b></div></div>
+  <p style="margin:0">مجموع نقاطك <b class="big" style="font-size:26px">${S.pts}</b> · أوسمة المحطات ${allB}/7</p></section>
+  <section class="card"><h3 style="font-size:18px">الخطوة الأخيرة: أرسل نتيجتك</h3><p class="note">أرسل نتيجتك إلى رائد النشاط ليحسبها لك في المسابقة.</p><button class="btn gold" id="snd" type="button">إرسال النتيجة</button></section>
+  <section class="card"><div class="badges">${D.st.map(s=>`<div class="badge ${S.st[s.id]&&S.st[s.id].c>=3?"on":""}"><span aria-hidden="true">${s.ic}</span>${s.t}</div>`).join("")}</div><button class="btn ghost" id="rp" type="button">العب مرة أخرى لتحسين نقاطك</button></section>`;
+  $("#snd").onclick=()=>S.im?sendView(true):imSurvey(h=>{app.innerHTML=topBar()+h},"card",()=>sendView(true));
+  $("#rp").onclick=()=>{S.st={};S.post=null;S.pts=0;save();map()};
+}
+/* ---------- قياس أثر المبادرة ---------- */
+const IM_Q=["حققت المبادرة الأهداف التي عرفتها في بدايتها","اكتسبت منها معارف ومهارات جديدة","زادت حماسي ورغبتي في المشاركة والتعلم","غيّرت شيئًا إيجابيًا في سلوكي أو ممارستي اليومية","أنا راضٍ عن المبادرة بشكل عام","كانت أنشطتها مناسبة ومحتواها واضحًا","سأستمر في تطبيق ما تعلمته، وأتمنى تطوير المبادرة"];
+const IM_O=[[3,"بدرجة مرتفعة"],[2,"بدرجة متوسطة"],[1,"بدرجة منخفضة"]];
+function imSurvey(put,card,onDone){const A=(Array.isArray(S.im)&&S.im.length===7?S.im:[0,0,0,0,0,0,0]).slice();let ib=S.ib||"",ii=S.ii||"";
+  const draw=()=>{const n=A.filter(Boolean).length;put(`<section class="${card}"><h2 style="font-size:22px;margin:0">قياس أثر المبادرة</h2><p class="note">قبل إرسال نتيجتك: إلى أي درجة تنطبق كل عبارة عليك؟ إجابتك الصادقة تساعدنا على تطوير المبادرة، ولا تؤثر في نتيجتك.</p>
+  ${IM_Q.map((q,k)=>`<fieldset class="imq"><legend><span>${k+1}</span>${q}</legend><div class="imo">${IM_O.map(([v,t])=>`<button type="button" data-k="${k}" data-v="${v}" aria-pressed="${A[k]===v}">${t}</button>`).join("")}</div></fieldset>`).join("")}
+  <label class="iml">أكثر ما أعجبني في المبادرة (اختياري)<textarea id="imb" maxlength="200" rows="2">${esc(ib)}</textarea></label>
+  <label class="iml">اقتراحي لتحسينها (اختياري)<textarea id="imi" maxlength="200" rows="2">${esc(ii)}</textarea></label>
+  <p class="note" role="status">أجبت عن ${n} من 7 عبارات</p><button class="btn" id="imok" type="button" ${n===7?"":"disabled"}>حفظ والمتابعة إلى الإرسال</button></section>`);
+    document.querySelectorAll(".imo button").forEach(b=>b.onclick=()=>{A[+b.dataset.k]=+b.dataset.v;ib=document.getElementById("imb").value;ii=document.getElementById("imi").value;const y=window.scrollY;draw();window.scrollTo(0,y)});
+    document.getElementById("imok").onclick=()=>{S.im=A;S.ib=document.getElementById("imb").value.trim().slice(0,200);S.ii=document.getElementById("imi").value.trim().slice(0,200);save();onDone()}};
+  draw();window.scrollTo(0,0)}
+/* ---------- الإرسال المباشر إلى جدول رائد النشاط ---------- */
+const SEND_URL="https://script.google.com/macros/s/AKfycbzfmBUcACJSe_ehcPxWdLVccv805RzSAdgJQTHv9E7ALR3ZC9z2nHLTBz5WKexHYDKz/exec";
+function autoSend(ini,m,code){const el=document.getElementById("as");if(!el) return;
+  const ok=()=>{el.className="as ok";el.textContent="✓ وصلت نتيجتك إلى رائد النشاط مباشرة، ولا تحتاج إلى إرسالها عبر واتساب.";const w=document.getElementById("wan");if(w) w.textContent="إرسال نسخة عبر واتساب اختياري، للاحتياط فقط."};
+  if(!SEND_URL||!window.fetch){el.className="as off";el.textContent="أرسل نتيجتك عبر واتساب من الزر التالي.";return}
+  if(S.sent===code) return ok();
+  el.className="as";el.textContent="جارٍ إرسال نتيجتك إلى رائد النشاط…";
+  fetch(SEND_URL,{method:"POST",mode:"no-cors",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify({ini,n:m.n||"",g:m.g||"",c:m.c||"",code})})
+   .then(()=>{S.sent=code;save();ok()}).catch(()=>{el.className="as off";el.textContent="تعذّر الإرسال المباشر الآن. أرسل نتيجتك عبر واتساب من الزر التالي."})}
+/* ---------- result code ---------- */
+function hash(s){let h=5381;for(let i=0;i<s.length;i++)h=((h*33)^s.charCodeAt(i))>>>0;return h.toString(36).toUpperCase().padStart(6,"0").slice(-6)}
+function makeCode(){const p={n:S.name,s:S.stage,g:S.grade,c:S.cls,pre:S.pre,post:S.post,st:D.st.map(s=>S.st[s.id]?S.st[s.id].c:-1),pts:S.pts,im:S.im||null,ib:S.ib||"",ii:S.ii||"",t:Date.now()};
+  const b=btoa(unescape(encodeURIComponent(JSON.stringify(p)))).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"");return "WT1."+b+"."+hash(SALT+b)}
+function sendView(final){
+  const code=makeCode();const pre=sum(S.pre),post=sum(S.post);
+  const msg=`درب وطن — ${final?"النتيجة النهائية":"تقدم الطالب"}\nالاسم: ${S.name}\nالصف: ${S.grade} · الفصل ${S.cls}\nاختبار البداية: ${pre}/7${post!=null?`\nالتحدي الختامي: ${post}/7`:""}\nالمحطات المنجزة: ${doneCount()}/7 · النقاط: ${S.pts}${S.im?"\nقياس الأثر: تم":""}\n\n${code}`;
+  app.innerHTML=topBar()+`<section class="card pop"><h2 style="font-size:22px">إرسال ${final?"النتيجة":"التقدم"}</h2><div class="as" id="as" role="status"></div><p class="note" id="wan">إن لم يظهر تأكيد الوصول، اضغط زر واتساب فتفتح محادثة رائد النشاط مباشرة، ثم أرسل الرسالة كما هي دون تعديل؛ فالرمز في آخرها يحمل نتيجتك.</p>
+  <a class="btn" id="wa" href="https://wa.me/966535597468?text=${encodeURIComponent(msg)}" target="_blank" rel="noopener">فتح واتساب وإرسال الرسالة</a>
+  <button class="btn ghost" id="cp" type="button">نسخ الرسالة</button><p class="note" id="cpm" role="status"></p>
+  <details><summary class="note" style="cursor:pointer">عرض الرسالة</summary><pre class="code" id="msg" style="white-space:pre-wrap;direction:rtl;font-family:var(--body)">${esc(msg)}</pre></details>
+  <button class="btn ghost" id="bk" type="button">رجوع</button></section>`;
+  $("#cp").onclick=async()=>{try{await navigator.clipboard.writeText(msg);$("#cpm").textContent="نُسخت الرسالة. الصقها في محادثة رائد النشاط وأرسلها."}catch(e){const r=document.createRange();r.selectNodeContents($("#msg"));$("details").open=true;const sel=getSelection();sel.removeAllRanges();sel.addRange(r);$("#cpm").textContent="حدّد النص الظاهر وانسخه يدويًا."}};
+  $("#bk").onclick=home;autoSend("watan",{n:S.name,g:S.grade,c:S.cls},code);
+}
+home();
+</script>
+
+</body></html>
